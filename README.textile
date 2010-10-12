@@ -1,0 +1,14 @@
+h1. Purpose
+
+This is a CCK field which enables you to operate on the data of the "update_feed_api":http://github.com/EugenMayer/update_feed_api and and the modules provided there using autocompletition and so forth.
+This cck field is e.g. used to implement drush make files as nodes in "drush_make_ui":http://github.com/EugenMayer/drush_make_ui
+
+h1. Features
+
+* Compundded CCK Field saving server_key, short_name, api_version, revision as structured database
+* using autocomplete to select module ( using the "autocomplete_element":http://github.com/EugenMayer/autocomplete_element module ) with conditional autocompletes
+* revisions of a module ar fetched "lazy" on demand
+
+h1. Installation / Usage
+# Just activate the module and the deps.
+## Dont forget to install the patched autcomplete_element module from : http://github.com/EugenMayer/autocomplete_element
