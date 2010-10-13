@@ -54,25 +54,18 @@ function update_feed_cck_table($element) {
     t('API'),
     t('Server'),
   );
-  $i = 0;
-  while (!$end) {
-    /** Any row will contains **/
-    if(array_key_exists($i, $element)) {
-      $rows[] = array(
-        'short_name' => check_plain($element[$i]['#item']['short_name']),
-        'version' => check_plain($element[$i]['#item']['module_release']),
-        'api_version' => check_plain($element[$i]['#item']['api_version']),
-        'server_key' => check_plain($element[$i]['#item']['server_key']),
-      );
-      $i++;
-    }
-    else {
-      $end = TRUE;
-    }
+  foreach(element_children($element) as $key) {
+    $rows[] = array(    
+      'short_name' => theme('update_feed_cck_value',$element[$key]['#item']['short_name'], 'short_name',  content_fields($element['#field_name'])),
+      'version' => theme('update_feed_cck_value',$element[$key]['#item']['module_release'], 'module_release',  content_fields($element['#field_name'])),
+      'api_version' => theme('update_feed_cck_value',$element[$key]['#item']['api_version'], 'api_version',  content_fields($element['#field_name'])),
+      'server_key' => theme('update_feed_cck_value',$element[$key]['#item']['server_key'], 'server_key',  content_fields($element['#field_name'])),
+    );  
   }
-  /** Theme a table with data from element and header **/
+ 
   return theme('table', $header, $rows);
 }
+
 /**
  * Theme function for the 'default' filefield formatter.
  */
@@ -107,7 +100,7 @@ function theme_update_feed_cck_formatter_module_release($element) {
   if (empty($element['#item'])) { 
     return '';
   }
-  return theme('update_feed_cck_value',$element['#item']['release'], 'module_release',  content_fields($element['#field_name']));
+  return theme('update_feed_cck_value',$element['#item']['module_release'], 'module_release',  content_fields($element['#field_name']));
 }
 
 function theme_update_feed_cck_formatter_short_name($element) {

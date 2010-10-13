@@ -99,4 +99,3 @@ function _update_feed_cck_autocomplete_releases($field_name, $delta) {
   print drupal_to_js(array('data' => $output, 'status' => true));
   exit();
 }
-  
