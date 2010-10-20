@@ -65,6 +65,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     '#plugin_options' => array(
       'cacheLength' => 1,
       'mustMatch' => 1,
+      'max' => 0,
       'extraParams' => array(
         'server_key' => array('update_feed_cck_field' => array('id' => 'select#'.$element['#id'].'-server-key') ),
         'api' => array('update_feed_cck_field' => array('id' => 'select#'.$element['#id'].'-api-version') ),
