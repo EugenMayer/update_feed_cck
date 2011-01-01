@@ -50,7 +50,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     '#default_value' => $defaults['server_key'],
     '#size' => '1',
     '#attributes' => array (
-      'class' => 'update_feed_cck_field'
+      'class' => 'update_feed_cck_fieldi'
     ),
     '#prefix' => '<div class="update_feed_field_container">',
     '#suffix' => '</div>',
@@ -91,9 +91,23 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     ),
   );
   $releases = array();
-  if(!empty($defaults['server_key']) && !empty($defaults['short_name']) && !empty($defaults['api_version'])) {
+  if(!empty($defaults['short_name']) && !empty($defaults['api_version'])) {
     $p = Project_factory::load_project($defaults['server_key'], $defaults['short_name'], $defaults['api_version'], TRUE);
-    $releases = $p->releases_to_array();
+    if($p == FALSE) {
+      $element['server_key']['#attributes']['class'] .= ' error';
+      $element['server_key']['#error'] = TRUE ;
+      drupal_set_message('Could not load project data for "'. implode(', ', array($defaults['short_name'], $defaults['server_key'], $defaults['api_version']) ). '" - does the project exist?','warning');
+    }
+    else {      
+      $releases = $p->releases_to_array();      
+    }
+  }
+
+  $version_not_found = FALSE;
+  if(!empty($defaults['short_name']) && array_search($defaults['module_release'],$releases) == FALSE) {    
+    $version_not_found = TRUE;
+    drupal_set_message('Could not find the current selected release '.$defaults['module_release'].' for package '.$defaults['short_name'],'warning');
+    $releases = array_merge($releases, array($defaults['module_release']));
   }
   
   $element['module_release'] = array(
@@ -108,6 +122,10 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     '#prefix' => '<div class="update_feed_field_container">',
     '#suffix' => '</div>',
   );
+  if($version_not_found) {
+    $version_not_found = TRUE;
+    $element['module_release']['#attributes']['class'] .= ' error';
+  }
   
   $element['refresh'] = array(
     '#type' => 'button',
