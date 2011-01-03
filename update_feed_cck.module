@@ -12,7 +12,7 @@ function update_feed_cck_menu() {
   $items = array();
   $items['update_feed_cck/autocomplete/modules'] = array(
     'title' => 'Update feed cck autocompletition',
-		'page callback' => '_update_feed_cck_autocomplete_modules',
+    'page callback' => '_update_feed_cck_autocomplete_modules',
     'access arguments' => array('update feed cck autocompletition'), 
     'type' => MENU_CALLBACK
   );
@@ -32,8 +32,11 @@ function update_feed_cck_perm() {
 
 function update_feed_cck_theme() {
   return array(
+    'update_feed_cck_package_table' => array (
+      'arguments' => array('packages' => NULL, 'field_name' => NULL, 'nid' => NULL),
+    ),
     'update_feed_module' => array (
-        'arguments' => array('element' => NULL),
+      'arguments' => array('element' => NULL),
     ),
     'update_feed_cck_value' => array(
       'arguments' => array('value' => NULL, 'name' => NULL, 'field' => NULL),
@@ -61,6 +64,31 @@ function update_feed_cck_theme() {
       'file' => 'update_feed_cck.formatter.inc',
     ),
   );
+}
+
+function theme_update_feed_cck_package_table($packages, $field_name = '', $nid = NULL) {
+  $header = array(
+    t('Module'),
+    t('Release'),
+    t('API'),
+    t('Server'),
+  );
+  $field = NULL;
+  if($field_name != '') {
+    $field = content_fields($field_name);
+  }
+  foreach($packages as $item) {
+    $rows[] = array(
+      'data' => array(
+        'short_name' => theme('update_feed_cck_value',check_plain($item['short_name']), 'short_name', $field),
+        'version' => theme('update_feed_cck_value',check_plain($item['module_release']), 'module_release',  $field),
+        'api_version' => theme('update_feed_cck_value',check_plain($item['api_version']), 'api_version', $field),
+        'server_key' => theme('update_feed_cck_value',check_plain($item['server_key']), 'server_key', $field ),
+      ),
+    );  
+  }
+  
+  return theme('table', $header, $rows);
 }
 
 function _update_feed_cck_autocomplete_modules() {

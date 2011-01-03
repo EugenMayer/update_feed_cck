@@ -42,28 +42,30 @@ function update_feed_cck_field_formatter_info() {
   );
 }
 
-
 function theme_update_feed_cck_value($val, $name, $field) {
-  return check_plain($val);
+  return $val;
 }
 
 function update_feed_cck_table($element) {
-  $header = array(
-    t('Module'),
-    t('Release'),
-    t('API'),
-    t('Server'),
-  );
-  foreach(element_children($element) as $key) {
-    $rows[] = array(    
-      'short_name' => theme('update_feed_cck_value',$element[$key]['#item']['short_name'], 'short_name',  content_fields($element['#field_name'])),
-      'version' => theme('update_feed_cck_value',$element[$key]['#item']['module_release'], 'module_release',  content_fields($element['#field_name'])),
-      'api_version' => theme('update_feed_cck_value',$element[$key]['#item']['api_version'], 'api_version',  content_fields($element['#field_name'])),
-      'server_key' => theme('update_feed_cck_value',$element[$key]['#item']['server_key'], 'server_key',  content_fields($element['#field_name'])),
-    );  
+  $childkeys = element_children($element);
+  foreach($childkeys as $key) {
+    $children[$key] = $element[$key]['#item'];
   }
- 
-  return theme('table', $header, $rows);
+  // lets sort the children by the shortname
+  usort($children,'_update_feed_cck_sort_by_name');
+  $count = count($children);
+  $fieldset = array( 
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => "Packages ($count)",
+    '#value' => theme('update_feed_cck_package_table', $children, $element['#field_name'], $element['#node']->nid),
+  );
+    
+  return theme('fieldset',$fieldset);
+}
+
+function _update_feed_cck_sort_by_name($a, $b) {  
+  return strcasecmp($a['short_name'],$b['short_name']);  
 }
 
 /**

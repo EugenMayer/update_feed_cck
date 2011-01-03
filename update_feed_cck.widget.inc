@@ -143,8 +143,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
       ),
     ),
     '#prefix' => '<div class="update_feed_field_refresh clear-block">',
-    '#suffix' => '</div>',
-   
+    '#suffix' => '</div>',   
   );
   return $element;
 }
