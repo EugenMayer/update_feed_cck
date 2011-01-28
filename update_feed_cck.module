@@ -129,7 +129,7 @@ function _update_feed_cck_autocomplete_releases($content_type, $field_name, $del
    // Rebuild the form.
   $form = form_builder($_POST['form_id'], $form, $form_state);
   // Render the new output.	
-	if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {		
+  if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {		
     if (isset($form['#multigroups']) && isset($form['#multigroups'][$group_name][$field_name])) {
       $form_element = $form[$group_name][$delta][$field_name]['module_release'];
     }
