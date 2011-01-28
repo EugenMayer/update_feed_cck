@@ -7,3 +7,10 @@
   top:20px;
   float:left;
 }
+
+.update_feed_field_delete {
+  position:relative;
+  top:20px;
+  float:left;
+	padding-left:10px;
+}

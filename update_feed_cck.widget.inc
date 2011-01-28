@@ -91,25 +91,28 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     ),
   );
   $releases = array();
-  if(!empty($defaults['short_name']) && !empty($defaults['api_version'])) {
+  if(!empty($defaults['short_name']) && !empty($defaults['api_version'])) {		
     $p = Project_factory::load_project($defaults['server_key'], $defaults['short_name'], $defaults['api_version'], TRUE);
     if($p == FALSE) {
       $element['server_key']['#attributes']['class'] .= ' error';
       $element['server_key']['#error'] = TRUE ;
       drupal_set_message('Could not load project data for "'. implode(', ', array($defaults['short_name'], $defaults['server_key'], $defaults['api_version']) ). '" - does the project exist?','warning');
     }
-    else {      
+    else {
       $releases = $p->releases_to_array();      
     }
   }
-
+  
   $version_not_found = FALSE;
-  if(!empty($defaults['short_name']) && array_search($defaults['module_release'],$releases) == FALSE) {    
+  // If the short name and module release is set, verify it exists
+  if(!empty($defaults['short_name']) && !empty($defaults['module_release']) && array_search($defaults['module_release'],$releases) == FALSE) {    
     $version_not_found = TRUE;
     drupal_set_message('Could not find the current selected release '.$defaults['module_release'].' for package '.$defaults['short_name'],'warning');
     $releases = array_merge($releases, array($defaults['module_release']));
   }
-  
+  if(empty($defaults['short_name'])) {
+    $defaults['module_release'] = '';
+  }
   $element['module_release'] = array(
     '#type' => 'select',
     '#title' => t('Release'),
@@ -123,19 +126,17 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     '#suffix' => '</div>',
   );
   if($version_not_found) {
-    $version_not_found = TRUE;
     $element['module_release']['#attributes']['class'] .= ' error';
   }
-  
   $element['refresh'] = array(
     '#type' => 'button',
-    '#title' => t('Refresh'),
-    '#value' => t('Refresh'),
+    '#title' => t('Get releases'),
+    '#value' => t('Get releases'),
     '#ahah'   => array (
       'event'    => 'click',
       'method'   => 'replace',
       'wrapper'  =>  $element['#id'].'-module-release-wrapper',
-      'path'     => 'update_feed_cck/autocomplete/releases/'.$element['#field_name'].'/'.$element['#delta'],
+      'path'     => 'update_feed_cck/autocomplete/releases/'.$form['#node']->type.'/'.$element['#field_name'].'/'.$element['#delta'],
       'effect'   => 'none',
       'progress' => array (
         'type'    => 'throbber',
@@ -143,6 +144,24 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
       ),
     ),
     '#prefix' => '<div class="update_feed_field_refresh clear-block">',
+    '#suffix' => '</div>',   
+  );
+	$element['delete'] = array(
+    '#type' => 'button',
+    '#title' => t('Delete'),
+    '#value' => t('Delete'),
+    '#ahah'   => array (
+      'event'    => 'click',
+      'method'   => 'replace',
+      'wrapper'  => str_replace('_','-',$element['#field_name']).'-items',
+      'path'     => 'update_feed_cck/autocomplete/delete/'.$form['#node']->type.'/'.$element['#field_name'].'/'.$element['#delta'],
+      'effect'   => 'none',
+      'progress' => array (
+        'type'    => 'throbber',
+        'message' => t('Deleting'),
+      ),
+    ),
+    '#prefix' => '<div class="update_feed_field_delete clear-block">',
     '#suffix' => '</div>',   
   );
   return $element;

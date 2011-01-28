@@ -16,10 +16,17 @@ function update_feed_cck_menu() {
     'access arguments' => array('update feed cck autocompletition'), 
     'type' => MENU_CALLBACK
   );
-   $items['update_feed_cck/autocomplete/releases/%'] = array(
+  $items['update_feed_cck/autocomplete/releases/%'] = array(
     'title' => 'Update feed cck autocompletition',
     'page callback' => '_update_feed_cck_autocomplete_releases',
-    'page arguments' => array(3,4),
+    'page arguments' => array(3,4,5),
+    'access arguments' => array('update feed cck autocompletition'), 
+    'type' => MENU_CALLBACK
+  );
+	$items['update_feed_cck/autocomplete/delete/%'] = array(
+    'title' => 'Update feed cck autocompletition',
+    'page callback' => '_update_feed_cck_autocomplete_delete',
+    'page arguments' => array(3,4,5),
     'access arguments' => array('update feed cck autocompletition'), 
     'type' => MENU_CALLBACK
   );
@@ -103,7 +110,7 @@ function _update_feed_cck_autocomplete_modules() {
   exit();
 }
 
-function _update_feed_cck_autocomplete_releases($field_name, $delta) {
+function _update_feed_cck_autocomplete_releases($content_type, $field_name, $delta, $test) {
   $cck_field = $_POST[$field_name][$delta];
   $server_key = $cck_field['server_key'];
   $short_name = $cck_field['short_name'];
@@ -121,9 +128,53 @@ function _update_feed_cck_autocomplete_releases($field_name, $delta) {
   );
    // Rebuild the form.
   $form = form_builder($_POST['form_id'], $form, $form_state);
-  // Render the new output.
-  $new_form = $form[$field_name][$delta]['module_release'];
-  $output =  drupal_render($new_form);  
+  // Render the new output.	
+	if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {		
+    if (isset($form['#multigroups']) && isset($form['#multigroups'][$group_name][$field_name])) {
+      $form_element = $form[$group_name][$delta][$field_name]['module_release'];
+    }
+    else {
+      $form_element = $form[$group_name][$field_name][$delta]['module_release'];
+    }
+  }
+  else {
+    $form_element = $form[$field_name][$delta]['module_release'];
+  }
+  $output =  drupal_render($form_element);  
+  print drupal_to_js(array('data' => $output, 'status' => true));
+  exit();
+}
+
+function _update_feed_cck_autocomplete_delete($content_type, $field_name, $delta, $test) {
+  $cck_field = $_POST[$field_name][$delta];
+  $server_key = $cck_field['server_key'];
+  $short_name = $cck_field['short_name'];
+  $api_version = $cck_field['api_version'];
+  if(!empty($server_key) && !empty($short_name) && !empty($api_version)) {
+    $p = update_feed_api_get_project($server_key, $short_name, $api_version, TRUE);
+  }
+    
+  $form_state = array('submitted' => FALSE);
+  $form_build_id = $_POST['form_build_id'];
+  $form = form_get_cache($form_build_id, $form_state);
+  $form += array(
+    '#post' => $_POST,
+    '#programmed' => FALSE,
+  );
+   // Rebuild the form.
+  $form = form_builder($_POST['form_id'], $form, $form_state);
+  // Render the new output.	
+	if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {
+		unset($form[$group_name][$field_name][$delta]);
+    $form_element = $form[$group_name][$field_name];		
+  }
+  else {
+		unset($form[$field_name][$delta]);
+    $form_element = $form[$field_name];
+  }
+	form_set_cache($form_build_id,$form, $form_state);
+
+  $output =  drupal_render($form_element);  
   print drupal_to_js(array('data' => $output, 'status' => true));
   exit();
 }

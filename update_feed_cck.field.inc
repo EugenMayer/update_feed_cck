@@ -47,7 +47,7 @@ function update_feed_cck_field_settings($op, $field) {
  * 
  */
 function update_feed_cck_content_is_empty($item, $field) {  
-  if (empty($item['short_name']) ||  empty($item['module_release'])) {    
+  if (empty($item['short_name']) || trim($item['short_name']) == '' ||  empty($item['module_release'])) {    
     return TRUE;
   }
   return FALSE;
