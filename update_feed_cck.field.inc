@@ -39,6 +39,7 @@ function update_feed_cck_field_settings($op, $field) {
         'short_name' => array('type' => 'varchar', 'length' => '50',  'default' => '', 'not null' => TRUE, 'views' => TRUE),
         'api_version' => array('type' => 'varchar', 'length' => '10',  'default' => '', 'not null' => TRUE, 'views' => TRUE),
         'module_release' => array('type' => 'varchar', 'length' => '50', 'default' => '', 'not null' => TRUE, 'views' => TRUE),
+        'ptype' => array('type' => 'varchar', 'length' => '255', 'default' => 'Modules', 'not null' => TRUE, 'views' => TRUE),
     );
   }
 }
@@ -78,5 +79,3 @@ function theme_update_feed_module($element) {
  */
 function update_feed_cck_settings_views_data($field) {
 }
-
-

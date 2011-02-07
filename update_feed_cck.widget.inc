@@ -55,6 +55,20 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     '#prefix' => '<div class="update_feed_field_container">',
     '#suffix' => '</div>',
   );
+  $types = _update_feed_api_package_types();  
+  $element['ptype'] = array(
+    '#type' => 'select',
+    '#title' => t('Type'),
+    '#options' => drupal_map_assoc($types),
+    '#default_value' => $defaults['ptype'],
+    '#size' => 1,
+    '#prefix' => '<div class="update_feed_field_container">',
+    '#suffix' => '</div>',
+    '#attributes' => array (
+      'class' => 'update_feed_cck_field'
+    ),
+  );
+
   $element['short_name'] = array(
     '#type' => 'autocomplete',
     '#attributes' => array (
@@ -68,6 +82,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
       'max' => 0,
       'extraParams' => array(
         'server_key' => array('update_feed_cck_field' => array('id' => 'select#'.$element['#id'].'-server-key') ),
+        'ptype' => array('update_feed_cck_field' => array('id' => 'select#'.$element['#id'].'-ptype') ),
         'api' => array('update_feed_cck_field' => array('id' => 'select#'.$element['#id'].'-api-version') ),
       ),
     ),
@@ -128,6 +143,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
   if($version_not_found) {
     $element['module_release']['#attributes']['class'] .= ' error';
   }
+  
   $element['refresh'] = array(
     '#type' => 'button',
     '#title' => t('Get releases'),

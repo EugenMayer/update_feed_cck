@@ -101,9 +101,9 @@ function theme_update_feed_cck_package_table($packages, $field_name = '', $nid =
 function _update_feed_cck_autocomplete_modules() {
   $server_key = $_GET['server_key'];
   $api_version = $_GET['api'];
+  $ptype = $_GET['ptype'];
   $keyword = $_GET['search'];
-  
-  $pl = new Project_list(array('server_key' => $server_key, 'api_version' => $api_version), 20);
+  $pl = new Project_list(array('server_key' => $server_key, 'api_version' => $api_version,'type' => $ptype), 20);
   $pl->search($keyword);
   $result = $pl->to_array();
   autocomplete_element_output($result);
