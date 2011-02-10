@@ -106,8 +106,8 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     ),
   );
   $releases = array();
-  if(!empty($defaults['short_name']) && !empty($defaults['api_version'])) {		
-    $p = Project_factory::load_project($defaults['server_key'], $defaults['short_name'], $defaults['api_version'], TRUE);
+  if(!empty($defaults['short_name']) && !empty($defaults['api_version'])) {
+    $p = Project_factory::load_project($defaults['server_key'], $defaults['short_name'], $defaults['api_version'], TRUE, $defaults['ptype']);
     if($p == FALSE) {
       $element['server_key']['#attributes']['class'] .= ' error';
       $element['server_key']['#error'] = TRUE ;

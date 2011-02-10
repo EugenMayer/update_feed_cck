@@ -23,7 +23,7 @@ function update_feed_cck_menu() {
     'access arguments' => array('update feed cck autocompletition'), 
     'type' => MENU_CALLBACK
   );
-	$items['update_feed_cck/autocomplete/delete/%'] = array(
+  $items['update_feed_cck/delete/%'] = array(
     'title' => 'Update feed cck autocompletition',
     'page callback' => '_update_feed_cck_autocomplete_delete',
     'page arguments' => array(3,4,5),
@@ -110,13 +110,14 @@ function _update_feed_cck_autocomplete_modules() {
   exit();
 }
 
-function _update_feed_cck_autocomplete_releases($content_type, $field_name, $delta, $test) {
+function _update_feed_cck_autocomplete_releases($content_type, $field_name, $delta) {
   $cck_field = $_POST[$field_name][$delta];
   $server_key = $cck_field['server_key'];
   $short_name = $cck_field['short_name'];
   $api_version = $cck_field['api_version'];
+  $type = $cck_field['ptype'];
   if(!empty($server_key) && !empty($short_name) && !empty($api_version)) {
-    $p = update_feed_api_get_project($server_key, $short_name, $api_version, TRUE);
+    $p = update_feed_api_get_project($server_key, $short_name, $api_version, TRUE, $type);
   }
     
   $form_state = array('submitted' => FALSE);
@@ -145,7 +146,7 @@ function _update_feed_cck_autocomplete_releases($content_type, $field_name, $del
   exit();
 }
 
-function _update_feed_cck_autocomplete_delete($content_type, $field_name, $delta, $test) {
+function _update_feed_cck_delete($content_type, $field_name, $delta) {
   $cck_field = $_POST[$field_name][$delta];
   $server_key = $cck_field['server_key'];
   $short_name = $cck_field['short_name'];
