@@ -147,7 +147,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
       'class' => "update_feed_cck_field $extra_class"
     ),
     '#prefix' => '<div class="update_feed_field_container">',
-    '#suffix' => '</div>',
+    '#suffix' => $has_newer ? "<b>........*........</b></div>" : '</div>',
   );
   if($version_not_found) {
     $element['module_release']['#attributes']['class'] .= ' error';

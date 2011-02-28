@@ -15,5 +15,5 @@
 	padding-left:10px;
 }
 .has_newer_version {
-  border:2px solid blue;
+  border:3px dotted #163452;
 }
