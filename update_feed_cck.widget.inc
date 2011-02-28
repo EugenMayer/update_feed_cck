@@ -119,11 +119,20 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
   }
   
   $version_not_found = FALSE;
+  $has_newer = FALSE;
   // If the short name and module release is set, verify it exists
   if(!empty($defaults['short_name']) && !empty($defaults['module_release']) && array_search($defaults['module_release'],$releases) == FALSE) {    
     $version_not_found = TRUE;
     drupal_set_message('Could not find the current selected release '.$defaults['module_release'].' for package '.$defaults['short_name'],'warning');
     $releases = array_merge($releases, array($defaults['module_release']));
+  }
+  else if(is_object($p)){   
+    $cur_release = $p->get_release($releases[$defaults['module_release']]);
+    if($r = $cur_release->has_newer_release('mn')) {
+     drupal_set_message($defaults['short_name'] . "({$defaults['module_release']}) has a newer minor release (".$r->get_info('version').')' );
+     $has_newer = TRUE;
+     $extra_class .= ' has_newer_version';
+    }
   }
   if(empty($defaults['short_name'])) {
     $defaults['module_release'] = '';
@@ -135,7 +144,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     '#default_value' => $defaults['module_release'],
     '#size' => 2,
     '#attributes' => array (
-      'class' => 'update_feed_cck_field'
+      'class' => "update_feed_cck_field $extra_class"
     ),
     '#prefix' => '<div class="update_feed_field_container">',
     '#suffix' => '</div>',

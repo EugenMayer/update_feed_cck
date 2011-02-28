@@ -14,3 +14,6 @@
   float:left;
 	padding-left:10px;
 }
+.has_newer_version {
+  border:2px solid blue;
+}
