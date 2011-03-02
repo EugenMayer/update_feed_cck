@@ -126,7 +126,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     drupal_set_message('Could not find the current selected release '.$defaults['module_release'].' for package '.$defaults['short_name'],'warning');
     $releases = array_merge($releases, array($defaults['module_release']));
   }
-  else if(is_object($p)){   
+  else if(is_object($p) && !empty($defaults['module_release'])){   
     $cur_release = $p->get_release($releases[$defaults['module_release']]);
     if($r = $cur_release->has_newer_release('mn')) {
      drupal_set_message($defaults['short_name'] . "({$defaults['module_release']}) has a newer minor release (".$r->get_info('version').')' );
