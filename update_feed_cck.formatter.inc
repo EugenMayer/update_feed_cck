@@ -52,6 +52,10 @@ function update_feed_cck_table($element) {
     $children[$key] = $element[$key]['#item'];
   }
   // lets sort the children by the shortname
+  if(!is_array($children)) {
+    $children = array();
+  }
+
   usort($children,'_update_feed_cck_sort_by_name');
   $count = count($children);
   $fieldset = array( 
