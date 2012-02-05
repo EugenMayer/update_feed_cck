@@ -146,6 +146,15 @@ function _update_feed_cck_autocomplete_releases($content_type, $field_name, $del
   exit();
 }
 
+/**
+ * Deletes a single field.
+ *
+ * @see update_feed_cck_menu().
+ *
+ * @param string $content_type
+ * @param string $field_name
+ * @param int $delta
+ */
 function _update_feed_cck_delete($content_type, $field_name, $delta) {
   $cck_field = $_POST[$field_name][$delta];
   $server_key = $cck_field['server_key'];
