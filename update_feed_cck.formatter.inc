@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 // Copyright (c) 2010 KontextWork
 // Author: Eugen Mayer
 
@@ -48,28 +46,28 @@ function theme_update_feed_cck_value($val, $name, $field) {
 
 function update_feed_cck_table($element) {
   $childkeys = element_children($element);
-  foreach($childkeys as $key) {
+  foreach ($childkeys as $key) {
     $children[$key] = $element[$key]['#item'];
   }
   // lets sort the children by the shortname
-  if(!is_array($children)) {
+  if (!is_array($children)) {
     $children = array();
   }
 
-  usort($children,'_update_feed_cck_sort_by_name');
+  usort($children, '_update_feed_cck_sort_by_name');
   $count = count($children);
-  $fieldset = array( 
+  $fieldset = array(
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#title' => "Packages ($count)",
     '#value' => theme('update_feed_cck_package_table', $children, $element['#field_name'], $element['#node']->nid),
   );
-    
-  return theme('fieldset',$fieldset);
+
+  return theme('fieldset', $fieldset);
 }
 
-function _update_feed_cck_sort_by_name($a, $b) {  
-  return strcasecmp($a['short_name'],$b['short_name']);  
+function _update_feed_cck_sort_by_name($a, $b) {
+  return strcasecmp($a['short_name'], $b['short_name']);
 }
 
 /**
@@ -85,37 +83,37 @@ function theme_update_feed_cck_formatter_default($element) {
 function theme_update_feed_cck_formatter_server_key($element) {
   // Inside a View this function may be called with null data. In that case,
   // just return.
-  if (empty($element['#item'])) { 
+  if (empty($element['#item'])) {
     return '';
   }
-  return theme('update_feed_cck_value',$element['#item']['server_key'], 'server_key',  content_fields($element['#field_name']));
+  return theme('update_feed_cck_value', $element['#item']['server_key'], 'server_key', content_fields($element['#field_name']));
 }
 
 function theme_update_feed_cck_formatter_api_version($element) {
   // Inside a View this function may be called with null data. In that case,
   // just return.
-  if (empty($element['#item'])) { 
+  if (empty($element['#item'])) {
     return '';
   }
-  return theme('update_feed_cck_value',$element['#item']['api_version'], 'api_version',  content_fields($element['#field_name']));
+  return theme('update_feed_cck_value', $element['#item']['api_version'], 'api_version', content_fields($element['#field_name']));
 }
 
 function theme_update_feed_cck_formatter_module_release($element) {
   // Inside a View this function may be called with null data. In that case,
   // just return.
-  if (empty($element['#item'])) { 
+  if (empty($element['#item'])) {
     return '';
   }
-  return theme('update_feed_cck_value',$element['#item']['module_release'], 'module_release',  content_fields($element['#field_name']));
+  return theme('update_feed_cck_value', $element['#item']['module_release'], 'module_release', content_fields($element['#field_name']));
 }
 
 function theme_update_feed_cck_formatter_short_name($element) {
   // Inside a View this function may be called with null data. In that case,
   // just return.
-  if (empty($element['#item'])) { 
+  if (empty($element['#item'])) {
     return '';
   }
-  return theme('update_feed_cck_value',$element['#item']['short_name'], 'short_name',  content_fields($element['#field_name']));
+  return theme('update_feed_cck_value', $element['#item']['short_name'], 'short_name', content_fields($element['#field_name']));
 }
 
 

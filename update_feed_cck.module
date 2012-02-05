@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // Copyright (c) 2010 KontextWork
 // Author: Eugen Mayer
@@ -13,21 +12,21 @@ function update_feed_cck_menu() {
   $items['update_feed_cck/autocomplete/modules'] = array(
     'title' => 'Update feed cck autocompletition',
     'page callback' => '_update_feed_cck_autocomplete_modules',
-    'access arguments' => array('update feed cck autocompletition'), 
+    'access arguments' => array('update feed cck autocompletition'),
     'type' => MENU_CALLBACK
   );
   $items['update_feed_cck/autocomplete/releases/%'] = array(
     'title' => 'Update feed cck autocompletition',
     'page callback' => '_update_feed_cck_autocomplete_releases',
-    'page arguments' => array(3,4,5),
-    'access arguments' => array('update feed cck autocompletition'), 
+    'page arguments' => array(3, 4, 5),
+    'access arguments' => array('update feed cck autocompletition'),
     'type' => MENU_CALLBACK
   );
   $items['update_feed_cck/delete/%'] = array(
     'title' => 'Update feed cck autocompletition',
     'page callback' => '_update_feed_cck_autocomplete_delete',
-    'page arguments' => array(3,4,5),
-    'access arguments' => array('update feed cck autocompletition'), 
+    'page arguments' => array(3, 4, 5),
+    'access arguments' => array('update feed cck autocompletition'),
     'type' => MENU_CALLBACK
   );
   return $items;
@@ -39,10 +38,10 @@ function update_feed_cck_perm() {
 
 function update_feed_cck_theme() {
   return array(
-    'update_feed_cck_package_table' => array (
+    'update_feed_cck_package_table' => array(
       'arguments' => array('packages' => NULL, 'field_name' => NULL, 'nid' => NULL),
     ),
-    'update_feed_module' => array (
+    'update_feed_module' => array(
       'arguments' => array('element' => NULL),
     ),
     'update_feed_cck_value' => array(
@@ -59,7 +58,7 @@ function update_feed_cck_theme() {
       'file' => 'update_feed_cck.formatter.inc',
     ),
     'update_feed_cck_formatter_short_name' => array(
-     'arguments' => array('element' => NULL, '_short_name'),
+      'arguments' => array('element' => NULL, '_short_name'),
       'file' => 'update_feed_cck.formatter.inc',
     ),
     'update_feed_cck_formatter_module_release' => array(
@@ -81,20 +80,20 @@ function theme_update_feed_cck_package_table($packages, $field_name = '', $nid =
     t('Server'),
   );
   $field = NULL;
-  if($field_name != '') {
+  if ($field_name != '') {
     $field = content_fields($field_name);
   }
-  foreach($packages as $item) {
+  foreach ($packages as $item) {
     $rows[] = array(
       'data' => array(
-        'short_name' => theme('update_feed_cck_value',check_plain($item['short_name']), 'short_name', $field),
-        'version' => theme('update_feed_cck_value',check_plain($item['module_release']), 'module_release',  $field),
-        'api_version' => theme('update_feed_cck_value',check_plain($item['api_version']), 'api_version', $field),
-        'server_key' => theme('update_feed_cck_value',check_plain($item['server_key']), 'server_key', $field ),
+        'short_name' => theme('update_feed_cck_value', check_plain($item['short_name']), 'short_name', $field),
+        'version' => theme('update_feed_cck_value', check_plain($item['module_release']), 'module_release', $field),
+        'api_version' => theme('update_feed_cck_value', check_plain($item['api_version']), 'api_version', $field),
+        'server_key' => theme('update_feed_cck_value', check_plain($item['server_key']), 'server_key', $field),
       ),
-    );  
+    );
   }
-  
+
   return theme('table', $header, $rows);
 }
 
@@ -103,7 +102,7 @@ function _update_feed_cck_autocomplete_modules() {
   $api_version = $_GET['api'];
   $ptype = $_GET['ptype'];
   $keyword = $_GET['search'];
-  $pl = new Project_list(array('server_key' => $server_key, 'api_version' => $api_version,'type' => $ptype), 20);
+  $pl = new Project_list(array('server_key' => $server_key, 'api_version' => $api_version, 'type' => $ptype), 20);
   $pl->search($keyword);
   $result = $pl->to_array();
   autocomplete_element_output($result);
@@ -116,10 +115,10 @@ function _update_feed_cck_autocomplete_releases($content_type, $field_name, $del
   $short_name = $cck_field['short_name'];
   $api_version = $cck_field['api_version'];
   $type = $cck_field['ptype'];
-  if(!empty($server_key) && !empty($short_name) && !empty($api_version)) {
-#    $p = update_feed_api_get_project($server_key, $short_name, $api_version, TRUE, $type);
+  if (!empty($server_key) && !empty($short_name) && !empty($api_version)) {
+    #    $p = update_feed_api_get_project($server_key, $short_name, $api_version, TRUE, $type);
   }
-    
+
   $form_state = array('submitted' => FALSE);
   $form_build_id = $_POST['form_build_id'];
   $form = form_get_cache($form_build_id, $form_state);
@@ -127,10 +126,10 @@ function _update_feed_cck_autocomplete_releases($content_type, $field_name, $del
     '#post' => $_POST,
     '#programmed' => FALSE,
   );
-   // Rebuild the form.
+  // Rebuild the form.
   $form = form_builder($_POST['form_id'], $form, $form_state);
   // Render the new output.	
-  if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {		
+  if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {
     if (isset($form['#multigroups']) && isset($form['#multigroups'][$group_name][$field_name])) {
       $form_element = $form[$group_name][$delta][$field_name]['module_release'];
     }
@@ -141,7 +140,7 @@ function _update_feed_cck_autocomplete_releases($content_type, $field_name, $del
   else {
     $form_element = $form[$field_name][$delta]['module_release'];
   }
-  $output =  drupal_render($form_element);  
+  $output = drupal_render($form_element);
   print drupal_to_js(array('data' => $output, 'status' => true));
   exit();
 }
@@ -160,10 +159,10 @@ function _update_feed_cck_delete($content_type, $field_name, $delta) {
   $server_key = $cck_field['server_key'];
   $short_name = $cck_field['short_name'];
   $api_version = $cck_field['api_version'];
-  if(!empty($server_key) && !empty($short_name) && !empty($api_version)) {
+  if (!empty($server_key) && !empty($short_name) && !empty($api_version)) {
     $p = update_feed_api_get_project($server_key, $short_name, $api_version, TRUE);
   }
-    
+
   $form_state = array('submitted' => FALSE);
   $form_build_id = $_POST['form_build_id'];
   $form = form_get_cache($form_build_id, $form_state);
@@ -171,20 +170,20 @@ function _update_feed_cck_delete($content_type, $field_name, $delta) {
     '#post' => $_POST,
     '#programmed' => FALSE,
   );
-   // Rebuild the form.
+  // Rebuild the form.
   $form = form_builder($_POST['form_id'], $form, $form_state);
   // Render the new output.	
-	if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {
-		unset($form[$group_name][$field_name][$delta]);
-    $form_element = $form[$group_name][$field_name];		
+  if (module_exists('fieldgroup') && ($group_name = _fieldgroup_field_get_group($content_type, $field_name))) {
+    unset($form[$group_name][$field_name][$delta]);
+    $form_element = $form[$group_name][$field_name];
   }
   else {
-		unset($form[$field_name][$delta]);
+    unset($form[$field_name][$delta]);
     $form_element = $form[$field_name];
   }
-	form_set_cache($form_build_id,$form, $form_state);
+  form_set_cache($form_build_id, $form, $form_state);
 
-  $output =  drupal_render($form_element);  
+  $output = drupal_render($form_element);
   print drupal_to_js(array('data' => $output, 'status' => true));
   exit();
 }
