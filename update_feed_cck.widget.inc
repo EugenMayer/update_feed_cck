@@ -171,7 +171,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
     '#prefix' => '<div class="update_feed_field_refresh clear-block">',
     '#suffix' => '</div>',   
   );
-	$element['delete'] = array(
+  $element['delete'] = array(
     '#type' => 'button',
     '#title' => t('Delete'),
     '#value' => t('Delete'),
@@ -179,7 +179,7 @@ function update_feed_cck_update_feed_module_process($element, $edit, &$form_stat
       'event'    => 'click',
       'method'   => 'replace',
       'wrapper'  => str_replace('_','-',$element['#field_name']).'-items',
-      'path'     => 'update_feed_cck/autocomplete/delete/'.$form['#node']->type.'/'.$element['#field_name'].'/'.$element['#delta'],
+      'path'     => 'update_feed_cck/delete/'.$form['#node']->type.'/'.$element['#field_name'].'/'.$element['#delta'],
       'effect'   => 'none',
       'progress' => array (
         'type'    => 'throbber',
